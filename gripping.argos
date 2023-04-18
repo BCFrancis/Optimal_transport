@@ -16,7 +16,7 @@
   <!-- *************** -->
   <controllers>
 
-    <buzz_controller_footbot id="fgc">
+    <buzz_controller_footbot id="bcf">
       <actuators>
         <differential_steering implementation="default" />
         <range_and_bearing     implementation="default" />
@@ -24,10 +24,12 @@
         <footbot_turret        implementation="default" />
       </actuators>
       <sensors>
-        <range_and_bearing implementation="medium" medium="rab" show_rays="false" />
+        <range_and_bearing implementation="medium" medium="rab" show_rays="true" />
         <footbot_proximity implementation = "default" show_rays = "true" />
       </sensors>
-      <params />
+          <params bytecode_file="collective_transport.bo" 
+                  debug_file="collective_transport.bdb" />
+
     </buzz_controller_footbot>
 
   </controllers>
@@ -42,9 +44,9 @@
       <position method="uniform" min="0,-2,0" max="0,2,0" />
       <orientation method="gaussian" mean="0,0,0" std_dev="360,0,0" />
       <entity quantity="5" max_trials="100">
-        <foot-bot id="f1" rab_data_size="100">
+        <foot-bot id="fb" rab_data_size="100">
           <body position="0,0,0" orientation="0,0,0" />
-          <controller config="fgc" />
+          <controller config="bcf" />
         </foot-bot>
       </entity>
     </distribute>
@@ -79,6 +81,7 @@
   <!-- ****************** -->
   <visualization>
     <qt-opengl>
+    <user_functions label="buzz_qt" />
       <camera>
           <placements>
             <placement index="0" position="0, 0, 15" look_at="0,0, 14" up="0.00622709,0.943554,0.331159" lens_focal_length="65" />
