@@ -1,6 +1,9 @@
 #
 # Executed once at init time
 #
+
+state = 0
+
 function init() {
   reset()
 	math.rng.setseed(id)
@@ -10,13 +13,20 @@ function init() {
 # Executed for each step
 #
 function step() {
-   log("This works")
+	if(state == 0)
+		set_wheels(20.0,20.0)
+	else if (state == 1)
+		log("State 1")
+	else if (state == 2)
+		log("State 2")
+
 }
 
 #
 # Executed once upon resetting
 #
 function reset() {
+	state = 0
 
 }
 
