@@ -24,12 +24,10 @@
         <footbot_turret        implementation="default" />
       </actuators>
       <sensors>
-        <range_and_bearing implementation="medium" medium="rab" show_rays="true" />
+        <range_and_bearing implementation="medium" medium="rab" show_rays="true" noise_std_dev="0" />
         <footbot_proximity implementation = "default" show_rays = "true" />
       </sensors>
-          <params bytecode_file="collective_transport.bo" 
-                  debug_file="collective_transport.bdb" />
-
+      <params bytecode_file="collective_transport.bo" debug_file="collective_transport.bdb" />
     </buzz_controller_footbot>
 
   </controllers>
