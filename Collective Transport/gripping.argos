@@ -1,0 +1,90 @@
+<?xml version="1.0" ?>
+<argos-configuration>
+
+  <!-- ************************* -->
+  <!-- * General configuration * -->
+  <!-- ************************* -->
+  <framework>
+    <system threads="0" />
+    <experiment length="0"
+                ticks_per_second="10"
+                random_seed="123" />
+  </framework>
+
+  <!-- *************** -->
+  <!-- * Controllers * -->
+  <!-- *************** -->
+  <controllers>
+
+    <buzz_controller_footbot id="fgc">
+      <actuators>
+        <differential_steering implementation="default" />
+        <range_and_bearing     implementation="default" />
+        <footbot_gripper       implementation="default" />
+        <footbot_turret        implementation="default" />
+      </actuators>
+      <sensors>
+        <range_and_bearing implementation="medium" medium="rab" show_rays="false" />
+        <footbot_proximity implementation = "default" show_rays = "true" />
+      </sensors>
+      <params />
+    </buzz_controller_footbot>
+
+  </controllers>
+
+  <!-- *********************** -->
+  <!-- * Arena configuration * -->
+  <!-- *********************** -->
+  <arena size="50,50,1" center="0,0,0.5">
+
+
+    <distribute>
+      <position method="uniform" min="0,-2,0" max="0,2,0" />
+      <orientation method="gaussian" mean="0,0,0" std_dev="360,0,0" />
+      <entity quantity="5" max_trials="100">
+        <foot-bot id="f1" rab_data_size="100">
+          <body position="0,0,0" orientation="0,0,0" />
+          <controller config="fgc" />
+        </foot-bot>
+      </entity>
+    </distribute>
+ 
+
+    <!-- To use the cylinder as a grippable object, it is enough to
+         set its 'movable' attribute to 'true', and define its
+         mass (in kg).
+    -->
+    <cylinder id="c" height="0.2" radius="1.0" mass="10.0" movable="true">
+      <body position="1.5,0,0" orientation="0,0,0" />
+    </cylinder>
+
+  </arena>
+
+  <!-- ******************* -->
+  <!-- * Physics engines * -->
+  <!-- ******************* -->
+  <physics_engines>
+    <dynamics2d id="dyn2d" gripping_rigidity="10000" />
+  </physics_engines>
+
+  <!-- ********* -->
+  <!-- * Media * -->
+  <!-- ********* -->
+  <media>
+    <range_and_bearing id="rab" />
+  </media>
+
+  <!-- ****************** -->
+  <!-- * Visualization * -->
+  <!-- ****************** -->
+  <visualization>
+    <qt-opengl>
+      <camera>
+          <placements>
+            <placement index="0" position="0, 0, 15" look_at="0,0, 14" up="0.00622709,0.943554,0.331159" lens_focal_length="65" />
+           </placements>
+        </camera>
+    </qt-opengl>
+  </visualization>
+
+</argos-configuration>

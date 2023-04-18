@@ -1,0 +1,6 @@
+/home/bfrancis/Documents/RBE595/Collective Transport/build/CMakeFiles/rebuild_cache.dir
+/home/bfrancis/Documents/RBE595/Collective Transport/build/CMakeFiles/edit_cache.dir
+/home/bfrancis/Documents/RBE595/Collective Transport/build/footbot_gripping/CMakeFiles/rebuild_cache.dir
+/home/bfrancis/Documents/RBE595/Collective Transport/build/footbot_gripping/CMakeFiles/footbot_gripping.dir
+/home/bfrancis/Documents/RBE595/Collective Transport/build/footbot_gripping/CMakeFiles/edit_cache.dir
+/home/bfrancis/Documents/RBE595/Collective Transport/build/footbot_gripping/CMakeFiles/footbot_gripping_autogen.dir
