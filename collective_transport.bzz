@@ -6,6 +6,7 @@ state = 0
 
 function init() {
   reset()
+
 	math.rng.setseed(id)
 }
 
@@ -13,13 +14,21 @@ function init() {
 # Executed for each step
 #
 function step() {
-	if(state == 0)
-		set_wheels(20.0,20.0)
-	else if (state == 1)
-		log("State 1")
-	else if (state == 2)
+	if(state == 0){
+		log(m_tWaypoints)
+		set_wheels(20.0,20.0)	
+		if (proximity[2].value > 0.99) {
+			state = 1
+		}
+	}
+	if (state == 1) {
+		gripper_lock()
+		set_wheels(-20.0,-20.0)	
+	}
+	if (state == 2){
 		log("State 2")
-
+	}
+	debug.print(state)
 }
 
 #
@@ -27,6 +36,7 @@ function step() {
 #
 function reset() {
 	state = 0
+	turret_enable()
 
 }
 

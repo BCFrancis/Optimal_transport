@@ -27,4 +27,5 @@ link_libraries(${ARGOS_LDFLAGS})
 # Descend into the controllers directory
 add_subdirectory(footbot_gripping)
 
-
+# Descend into the loop_functions directory
+add_subdirectory(loop_functions)
