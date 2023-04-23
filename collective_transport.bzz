@@ -7,15 +7,18 @@ state = 0
 function init() {
   reset()
 
-	math.rng.setseed(id)}
+	math.rng.setseed(id)
 }
 
 #
 # Executed for each step
 #
 function step() {
+	time = time + 1
+	if (time > 10){
+	log(obj_position[0])
+	}
 	if(state == 0){
-		log(m_tWaypoints)
 		set_wheels(20.0,20.0)	
 		if (proximity[2].value > 0.99) {
 			state = 1
@@ -37,7 +40,8 @@ function step() {
 function reset() {
 	state = 0
 	turret_enable()
-
+	log(obj_position)
+	time = 0
 }
 
 #

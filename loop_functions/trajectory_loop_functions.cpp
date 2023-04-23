@@ -61,7 +61,8 @@ void CTrajectoryLoopFunctions::Init(TConfigurationNode& t_tree) {
       m_tWaypoints[pcFB] = std::vector<CVector3>();
       /* Add the initial position of the foot-bot */
       m_tWaypoints[pcFB].push_back(pcFB->GetEmbodiedEntity().GetOriginAnchor().Position);
-   }
+      BuzzForeachVM(PutStimuli(pcFB->GetEmbodiedEntity().GetOriginAnchor().Position));
+      }
 }
 
 /****************************************/
@@ -83,7 +84,9 @@ void CTrajectoryLoopFunctions::Reset() {
       m_tWaypoints[pcFB].clear();
       /* Add the initial position of the foot-bot */
       m_tWaypoints[pcFB].push_back(pcFB->GetEmbodiedEntity().GetOriginAnchor().Position);
+      BuzzForeachVM(PutStimuli(pcFB->GetEmbodiedEntity().GetOriginAnchor().Position));
    }
+
 }
 
 /****************************************/
