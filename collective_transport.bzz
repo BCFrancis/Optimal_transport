@@ -1,8 +1,18 @@
 #
 # Executed once at init time
 #
+include "include/vec2.bzz"
 
 state = -1
+
+function force_vector(rid, data) {
+  return math.vec2.newp(-1*(100/data.distance)^2, data.azimuth)
+}
+
+function force_sum(rid, data, accum) {
+  return math.vec2.add(data, accum)
+}
+ 
 
 function init() {
   reset()
@@ -50,15 +60,19 @@ function step() {
 			}
     })
 		if (touching){
-				gripper_lock()
+				#gripper_lock()
 				set_wheels(0.0,0.0)	
 				state = 2
 			}
 	}
 	if (state == 2){
-		log("State 2")
+		force = neighbors.map(force_vector).reduce(force_sum, math.vec2.new(0.0, 0.0))
+		if(neighbors.count() > 0){
+    	math.vec2.scale(force, 1.0 / neighbors.count())
+		}
+		goto(force.x, force.y)
+		debug.print(force.x,  " ", force.y)
 	}
-	debug.print(state)
 }
 
 #
