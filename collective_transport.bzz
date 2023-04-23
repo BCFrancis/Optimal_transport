@@ -2,7 +2,7 @@
 # Executed once at init time
 #
 
-state = 0
+state = -1
 
 function init() {
   reset()
@@ -15,18 +15,45 @@ function init() {
 #
 function step() {
 	time = time + 1
-	if (time > 10){
-	log(obj_position[0])
+	if (time > 2 and first){
+		state = 0
+		first = 0
 	}
 	if(state == 0){
-		set_wheels(20.0,20.0)	
-		if (proximity[2].value > 0.99) {
+		y_diff = obj_position[1] - pose.position.y
+		x_diff = obj_position[0] - pose.position.x
+  	target_angle = math.atan(y_diff, x_diff)
+	  angle_diff = target_angle - pose.orientation.yaw
+		pi = math.pi
+		while (angle_diff > pi) {
+      angle_diff = angle_diff + (-2 * pi)
+   	}
+   	while (angle_diff < -pi) {
+      angle_diff = angle_diff + (2 * pi)
+   	}
+		if (angle_diff >= 0){
+			set_wheels(-20.0,20.0)	
+		}
+		if (angle_diff < 0){
+			set_wheels(20.0,-20.0)	
+		}
+		if (math.abs(angle_diff) < 0.1) {
 			state = 1
 		}
 	}
 	if (state == 1) {
-		gripper_lock()
-		set_wheels(-20.0,-20.0)	
+		set_wheels(20.0,20.0)	
+  	touching = 0
+		foreach(proximity, function(key, value) {
+      if (value.value > 0.9){		
+				touching = 1
+			}
+    })
+		if (touching){
+				gripper_lock()
+				set_wheels(0.0,0.0)	
+				state = 2
+			}
 	}
 	if (state == 2){
 		log("State 2")
@@ -38,10 +65,10 @@ function step() {
 # Executed once upon resetting
 #
 function reset() {
-	state = 0
+	state = -1
 	turret_enable()
-	log(obj_position)
 	time = 0
+	first = 1
 }
 
 #
