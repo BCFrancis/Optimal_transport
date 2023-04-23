@@ -23,12 +23,16 @@ static const Real MIN_DISTANCE_SQUARED = MIN_DISTANCE * MIN_DISTANCE;
 struct PutStimuli : public CBuzzLoopFunctions::COperation {
 
    /** Constructor */
-   PutStimuli(const std::vector<Real>& vec_stimuli) : m_vecStimuli(vec_stimuli) {}
+   PutStimuli(const std::vector<CVector3>& vec_stimuli) : m_vecStimuli(vec_stimuli) {}
    
    /** The action happens here */
    virtual void operator()(const std::string& str_robot_id,buzzvm_t t_vm) {
       /* Set the values of the table 'stimulus' in the Buzz VM */
+      std::vector<Real> real_vec_stimuli;
       BuzzTableOpen(t_vm, "obj_position");
+      /*real_vec_stimuli.push_back(m_vecStimuli.GetX()); 
+      real_vec_stimuli.push_back(m_vecStimuli.GetY());
+      real_vec_stimuli.push_back(m_vecStimuli.GetZ()); */
       for(int i = 0; i < m_vecStimuli.size(); ++i) {
          BuzzTablePut(t_vm, i, static_cast<float>(m_vecStimuli[i]));
       }
@@ -36,7 +40,7 @@ struct PutStimuli : public CBuzzLoopFunctions::COperation {
    }
 
    /** Calculated stimuli */
-   const std::vector<Real>& m_vecStimuli;
+   const std::vector<CVector3>& m_vecStimuli;
 };
 
 
@@ -46,6 +50,7 @@ void CTrajectoryLoopFunctions::Init(TConfigurationNode& t_tree) {
     * and create an entry in the waypoint map for each of them
     */
    /* Get the map of all foot-bots from the space */
+   CBuzzLoopFunctions::Init(t_tree);
    CSpace::TMapPerType& tFBMap = GetSpace().GetEntitiesByType("cylinder");
    /* Go through them */
    for(CSpace::TMapPerType::iterator it = tFBMap.begin();
@@ -105,9 +110,9 @@ void CTrajectoryLoopFunctions::PostStep() {
 }
 /****************************************/
 /****************************************/
-void CThresholdModel::BuzzBytecodeUpdated() {
+void CTrajectoryLoopFunctions::BuzzBytecodeUpdated() {
    /* Convey the stimuli to every robot */
-   BuzzForeachVM(PutStimuli(m_vecStimuli));
+   /*BuzzForeachVM(PutStimuli(m_vecStimuli));*/
 }
 /****************************************/
 /****************************************/

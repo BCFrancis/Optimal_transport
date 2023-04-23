@@ -34,7 +34,7 @@ public:
 private:
 
   /** The stimuli associated to the tasks */
-   std::vector<Real> m_vecStimuli;
+   std::vector<CVector3> m_vecStimuli;
 };
 
 #endif
