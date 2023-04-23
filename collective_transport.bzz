@@ -7,7 +7,7 @@ state = 0
 function init() {
   reset()
 
-	math.rng.setseed(id)
+	math.rng.setseed(id)}
 }
 
 #

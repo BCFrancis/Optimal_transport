@@ -23,24 +23,23 @@ static const Real MIN_DISTANCE_SQUARED = MIN_DISTANCE * MIN_DISTANCE;
 struct PutStimuli : public CBuzzLoopFunctions::COperation {
 
    /** Constructor */
-   PutStimuli(const std::vector<CVector3>& vec_stimuli) : m_vecStimuli(vec_stimuli) {}
+   PutStimuli(const argos::CVector3 vec_stimuli) : m_vecStimuli(vec_stimuli) {}
    
    /** The action happens here */
    virtual void operator()(const std::string& str_robot_id,buzzvm_t t_vm) {
       /* Set the values of the table 'stimulus' in the Buzz VM */
-      std::vector<Real> real_vec_stimuli;
       BuzzTableOpen(t_vm, "obj_position");
       /*real_vec_stimuli.push_back(m_vecStimuli.GetX()); 
       real_vec_stimuli.push_back(m_vecStimuli.GetY());
       real_vec_stimuli.push_back(m_vecStimuli.GetZ()); */
-      for(int i = 0; i < m_vecStimuli.size(); ++i) {
+      for(int i = 0; i < 3; ++i) {
          BuzzTablePut(t_vm, i, static_cast<float>(m_vecStimuli[i]));
       }
       BuzzTableClose(t_vm);
    }
 
    /** Calculated stimuli */
-   const std::vector<CVector3>& m_vecStimuli;
+   const argos::CVector3 m_vecStimuli;
 };
 
 
@@ -104,8 +103,8 @@ void CTrajectoryLoopFunctions::PostStep() {
                         m_tWaypoints[pcFB].back()) > MIN_DISTANCE_SQUARED) {
          m_tWaypoints[pcFB].push_back(pcFB->GetEmbodiedEntity().GetOriginAnchor().Position);
       }
+      BuzzForeachVM(PutStimuli(pcFB->GetEmbodiedEntity().GetOriginAnchor().Position));
    }
-   BuzzForeachVM(PutStimuli(m_tWaypoints));
 
 }
 /****************************************/
