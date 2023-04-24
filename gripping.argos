@@ -24,8 +24,8 @@
         <footbot_turret        implementation="default" />
       </actuators>
       <sensors>
-        <range_and_bearing implementation="medium" medium="rab" show_rays="true" noise_std_dev="0" check_occlusions="false"/>
-        <footbot_proximity implementation = "default" show_rays = "true" />
+        <range_and_bearing implementation="medium" medium="rab" show_rays="true"/>
+        <footbot_proximity implementation="default" show_rays="true" />
         <positioning implementation="default" />
 
       </sensors>
@@ -47,7 +47,7 @@
       <position method="uniform" min="0,-2,0" max="0,2,0" />
       <orientation method="uniform" min="0,0,0" max="0,0,0" />
       <entity quantity="5" max_trials="100">
-        <foot-bot id="fb" rab_range = "100" rab_data_size="100">
+        <foot-bot id="fb" rab_range="100" rab_data_size="100">
           <body position="0,0,0" orientation="0,0,0" />
           <controller config="bcf" />
         </foot-bot>
@@ -76,7 +76,7 @@
   <!-- * Media * -->
   <!-- ********* -->
   <media>
-    <range_and_bearing id="rab" />
+    <range_and_bearing id="rab"  check_occlusions="false"/>
   </media>
 
   <!-- ****************** -->
