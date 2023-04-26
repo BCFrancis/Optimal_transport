@@ -42,12 +42,14 @@ function step() {
    	while (angle_diff < -pi) {
       angle_diff = angle_diff + (2 * pi)
    	}
+		turning_speed = 15.0
 		if (angle_diff >= 0){
-			set_wheels(-20.0,20.0)	
+			set_wheels(-turning_speed,turning_speed)	
 		}
 		if (angle_diff < 0){
-			set_wheels(20.0,-20.0)	
+			set_wheels(turning_speed,-turning_speed)	
 		}
+		log(id, " ", angle_diff)
 		if (math.abs(angle_diff) < 0.1) {
 			state = 1
 		}
@@ -85,8 +87,8 @@ function step() {
 	}
 	if (state == 3){
 		initial_dispersion = 10.0
-		follower_time = 30.0
-		reset_time = 50.0
+		follower_time = 20.0
+		reset_time = follower_time + 20.0
 		force = neighbors.map(force_vector).reduce(force_sum, math.vec2.new(0.0, 0.0))
 		if(neighbors.count() > 0){
     	math.vec2.scale(force, 1.0 / neighbors.count())
@@ -125,11 +127,9 @@ function step() {
 					set_wheels(outside_wheel, inside_wheel + speed_modifier)
 				}
 			}
-			
-		
 		}
 	}
-	
+	debug.print(state)
 }
 
 #
