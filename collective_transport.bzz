@@ -49,7 +49,6 @@ function step() {
 		if (angle_diff < 0){
 			set_wheels(turning_speed,-turning_speed)	
 		}
-		log(id, " ", angle_diff)
 		if (math.abs(angle_diff) < 0.1) {
 			state = 1
 		}
@@ -63,9 +62,14 @@ function step() {
 			}
     })
 		if (touching){
-				#gripper_lock()
 				set_wheels(0.0,0.0)	
 				state = 2
+				loop_counter = loop_counter + 1
+				log(loop_counter)
+				if (loop_counter > 25){
+					gripper_lock()
+					state = 4
+				}
 			}
 	}
 	if (state == 2){
@@ -129,7 +133,10 @@ function step() {
 			}
 		}
 	}
-	debug.print(state)
+	if (state == 4){
+		#goto(100, 0)
+		
+	}
 }
 
 #
@@ -141,6 +148,7 @@ function reset() {
 	time = 0
 	first = 1
 	all_ready = 0
+	loop_counter = 0
 }
 
 #
