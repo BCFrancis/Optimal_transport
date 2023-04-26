@@ -29,6 +29,7 @@ function step() {
 		state = 0
 		first = 0
 	}
+	neighbors.broadcast("my_state", state)
 	if(state == 0){
 		y_diff = obj_position[1] - pose.position.y
 		x_diff = obj_position[0] - pose.position.x
@@ -66,13 +67,69 @@ function step() {
 			}
 	}
 	if (state == 2){
+		ready = 0
+		neighbors.listen("my_state",
+      function(value_id, value, robot_id) {
+			if (value == 2) {
+				ready = ready+1
+			}
+			if (ready == neighbors.count()){
+				all_ready = 1
+			}		
+			})		
+		
+		if (all_ready) {
+			state = 3
+			init_time = time
+		}
+	}
+	if (state == 3){
+		initial_dispersion = 10.0
+		follower_time = 30.0
+		reset_time = 50.0
 		force = neighbors.map(force_vector).reduce(force_sum, math.vec2.new(0.0, 0.0))
 		if(neighbors.count() > 0){
     	math.vec2.scale(force, 1.0 / neighbors.count())
 		}
-		goto(force.x, force.y)
-		debug.print(force.x,  " ", force.y)
+		if (time - init_time  < initial_dispersion){
+			goto(force.x, force.y)
+		}
+		else {
+			if ((time - init_time  > follower_time) and (time - init_time <= reset_time))  {
+				goto(force.x, force.y)
+			} else if (time - init_time > reset_time) {
+				state = 0
+			}
+			else {
+				l_dist = 0.0
+				r_dist = 0.0
+				i = 0
+				while (i < 23){
+					i = i + 1
+					if (proximity[i].value > 0){
+						if (i < 12) {
+							l_dist = math.max(l_dist,proximity[i].value)
+						} else if (i > 12) {
+							r_dist = math.max(r_dist,proximity[i].value)
+						}
+					}
+				}
+				turn_coeff = 20.0
+				inside_wheel = 8.0
+				outside_wheel = 12.0
+				if (l_dist > r_dist) {
+					speed_modifier = turn_coeff*(l_dist- 0.5)
+					set_wheels(inside_wheel + speed_modifier, outside_wheel)
+				} else {
+					speed_modifier = turn_coeff*(r_dist - 0.5)
+					set_wheels(outside_wheel, inside_wheel + speed_modifier)
+				}
+			}
+			
+		
+		}
 	}
+	
 }
 
 #
@@ -83,6 +140,7 @@ function reset() {
 	turret_enable()
 	time = 0
 	first = 1
+	all_ready = 0
 }
 
 #

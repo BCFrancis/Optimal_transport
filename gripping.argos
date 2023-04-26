@@ -47,7 +47,7 @@
       <position method="uniform" min="0,-2,0" max="0,2,0" />
       <orientation method="uniform" min="0,0,0" max="0,0,0" />
       <entity quantity="5" max_trials="100">
-        <foot-bot id="fb" rab_range="100" rab_data_size="100">
+        <foot-bot id="fb" rab_data_size="100">
           <body position="0,0,0" orientation="0,0,0" />
           <controller config="bcf" />
         </foot-bot>
@@ -59,7 +59,7 @@
          set its 'movable' attribute to 'true', and define its
          mass (in kg).
     -->
-    <cylinder id="c" height="0.2" radius="1.0" mass="1000.0" movable="true">
+    <cylinder id="c" height="0.2" radius="1.0" mass="10000.0" movable="true">
       <body position="1.5,0,0" orientation="0,0,0" />
     </cylinder>
 
