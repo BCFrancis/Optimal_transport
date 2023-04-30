@@ -104,7 +104,7 @@ function step() {
 		force_x_diff =  pose.position.x - obj_position[0]
   	force_angle = math.atan(force_y_diff, force_x_diff)
 		force_dist = math.sqrt(force_y_diff^2 + force_x_diff^2)
-		obj_force = force_vector(id, {.distance=force_dist*60,.azimuth=force_angle})
+		obj_force = force_vector(id, {.distance=force_dist*500,.azimuth=force_angle})
 		force.x = force.x + obj_force.x
 		force.y = force.y + obj_force.y
 		if(neighbors.count() > 0){

@@ -6,7 +6,7 @@
   <!-- ************************* -->
   <framework>
     <system threads="0" />
-    <experiment length="0"
+    <experiment length="5000"
                 ticks_per_second="10"
                 random_seed="123" />
   </framework>
@@ -47,7 +47,7 @@
     <distribute>
       <position method="uniform" min="0,-2,0" max="0,2,0" />
       <orientation method="uniform" min="0,0,0" max="0,0,0" />
-      <entity quantity="10" max_trials="100">
+      <entity quantity="3" max_trials="100">
         <foot-bot id="fb" rab_data_size="100">
           <body position="0,0,0" orientation="0,0,0" />
           <controller config="bcf" />
