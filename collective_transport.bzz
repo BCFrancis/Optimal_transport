@@ -29,6 +29,7 @@ function step() {
 		state = 0
 		first = 0
 	}
+	neighbors.broadcast("my_state", state)
 	if(state == 0){
 		y_diff = obj_position[1] - pose.position.y
 		x_diff = obj_position[0] - pose.position.x
@@ -41,11 +42,12 @@ function step() {
    	while (angle_diff < -pi) {
       angle_diff = angle_diff + (2 * pi)
    	}
+		turning_speed = 1.0
 		if (angle_diff >= 0){
-			set_wheels(-20.0,20.0)	
+			set_wheels(-turning_speed,turning_speed)	
 		}
 		if (angle_diff < 0){
-			set_wheels(20.0,-20.0)	
+			set_wheels(turning_speed,-turning_speed)	
 		}
 		if (math.abs(angle_diff) < 0.1) {
 			state = 1
@@ -60,18 +62,86 @@ function step() {
 			}
     })
 		if (touching){
-				#gripper_lock()
 				set_wheels(0.0,0.0)	
 				state = 2
+				loop_counter = loop_counter + 1
+				log(loop_counter)
+				if (loop_counter > 30){
+					gripper_lock()
+					state = 4
+				}
 			}
 	}
 	if (state == 2){
-		force = neighbors.map(force_vector).reduce(force_sum, math.vec2.new(0.0, 0.0))
-		if(neighbors.count() > 0){
-    	math.vec2.scale(force, 1.0 / neighbors.count())
+		ready = 0
+		neighbors.listen("my_state",
+      function(value_id, value, robot_id) {
+			if (value == 2) {
+				ready = ready+1
+			}
+			if (ready == neighbors.count()){
+				all_ready = 1
+			}		
+			})		
+		
+		if (all_ready) {
+			state = 3
+			init_time = time
 		}
-		goto(force.x, force.y)
-		debug.print(force.x,  " ", force.y)
+	}
+	if (state == 3){
+		initial_dispersion = 10.0
+		follower_time = 30.0
+		reset_time = follower_time + 20.0
+		force = neighbors.map(force_vector).reduce(force_sum, math.vec2.new(0.0, 0.0))
+		force_y_diff = pose.position.y -  obj_position[1] 
+		force_x_diff =  pose.position.x - obj_position[0]
+  	force_angle = math.atan(force_y_diff, force_x_diff)
+		force_dist = math.sqrt(force_y_diff^2 + force_x_diff^2)
+		obj_force = force_vector(id, {.distance=force_dist*100,.azimuth=force_angle})
+		force.x = force.x + obj_force.x
+		force.y = force.y + obj_force.y
+		if(neighbors.count() > 0){
+    	math.vec2.scale(force, 1.0 / (neighbors.count() + 1))
+		}
+		if (time - init_time  < initial_dispersion){
+			goto(force.x, force.y)
+		}
+		else {
+			if ((time - init_time  > follower_time) and (time - init_time <= reset_time))  {
+				goto(force.x, force.y)
+			} else if (time - init_time > reset_time) {
+				state = 0
+			}
+			else {
+				l_dist = 0.0
+				r_dist = 0.0
+				i = 0
+				while (i < 23){
+					i = i + 1
+					if (proximity[i].value > 0){
+						if (i < 12) {
+							l_dist = math.max(l_dist,proximity[i].value)
+						} else if (i > 12) {
+							r_dist = math.max(r_dist,proximity[i].value)
+						}
+					}
+				}
+				turn_coeff = 10.0
+				inside_wheel = 1.0
+				outside_wheel = 3.0
+				if (l_dist > r_dist) {
+					speed_modifier = turn_coeff*(l_dist- 0.5)
+					set_wheels(inside_wheel + speed_modifier, outside_wheel)
+				} else {
+					speed_modifier = turn_coeff*(r_dist - 0.5)
+					set_wheels(outside_wheel, inside_wheel + speed_modifier)
+				}
+			}
+		}
+	}
+	if (state == 4){
+		set_wheels(0.0, 0.0)
 	}
 }
 
@@ -83,6 +153,8 @@ function reset() {
 	turret_enable()
 	time = 0
 	first = 1
+	all_ready = 0
+	loop_counter = 0
 }
 
 #

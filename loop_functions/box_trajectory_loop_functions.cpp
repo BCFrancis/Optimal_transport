@@ -1,4 +1,4 @@
-#include "trajectory_loop_functions.h"
+#include "box_trajectory_loop_functions.h"
 #include "buzz/buzzvm.h"
 
 /****************************************/
@@ -43,7 +43,7 @@ struct PutStimuli : public CBuzzLoopFunctions::COperation {
 };
 
 
-void CTrajectoryLoopFunctions::Init(TConfigurationNode& t_tree) {
+void CBoxTrajectoryLoopFunctions::Init(TConfigurationNode& t_tree) {
    /*
     * Go through all the robots in the environment
     * and create an entry in the waypoint map for each of them
@@ -51,13 +51,13 @@ void CTrajectoryLoopFunctions::Init(TConfigurationNode& t_tree) {
    /* Get the map of all foot-bots from the space */
    CBuzzLoopFunctions::Init(t_tree);
    GetNodeAttribute(t_tree, "outfile", m_strOutFile);
-   CSpace::TMapPerType& tFBMap = GetSpace().GetEntitiesByType("cylinder");
+   CSpace::TMapPerType& tFBMap = GetSpace().GetEntitiesByType("box");
    /* Go through them */
    for(CSpace::TMapPerType::iterator it = tFBMap.begin();
        it != tFBMap.end();
        ++it) {
       /* Create a pointer to the current object */
-      CCylinderEntity* pcFB = any_cast<CCylinderEntity*>(it->second);
+      CBoxEntity* pcFB = any_cast<CBoxEntity*>(it->second);
       /* Create a waypoint vector */
       m_tWaypoints[pcFB] = std::vector<CVector3>();
       /* Add the initial position of the foot-bot */
@@ -72,18 +72,18 @@ void CTrajectoryLoopFunctions::Init(TConfigurationNode& t_tree) {
 /****************************************/
 /****************************************/
 
-void CTrajectoryLoopFunctions::Reset() {
+void CBoxTrajectoryLoopFunctions::Reset() {
    /*
     * Clear all the waypoint vectors
     */
    /* Get the map of all foot-bots from the space */
-   CSpace::TMapPerType& tFBMap = GetSpace().GetEntitiesByType("cylinder");
+   CSpace::TMapPerType& tFBMap = GetSpace().GetEntitiesByType("box");
    /* Go through them */
    for(CSpace::TMapPerType::iterator it = tFBMap.begin();
        it != tFBMap.end();
        ++it) {
       /* Create a pointer to the current foot-bot */
-      CCylinderEntity* pcFB = any_cast<CCylinderEntity*>(it->second);
+      CBoxEntity* pcFB = any_cast<CBoxEntity*>(it->second);
       /* Clear the waypoint vector */
       m_tWaypoints[pcFB].clear();
       /* Add the initial position of the foot-bot */
@@ -97,19 +97,16 @@ void CTrajectoryLoopFunctions::Reset() {
 
 /****************************************/
 /****************************************/
-void CTrajectoryLoopFunctions::Destroy() {
-   m_cOutFile.close();
-}
 
-void CTrajectoryLoopFunctions::PostStep() {
+void CBoxTrajectoryLoopFunctions::PostStep() {
    /* Get the map of all foot-bots from the space */
-   CSpace::TMapPerType& tFBMap = GetSpace().GetEntitiesByType("cylinder");
+   CSpace::TMapPerType& tFBMap = GetSpace().GetEntitiesByType("box");
    /* Go through them */
    for(CSpace::TMapPerType::iterator it = tFBMap.begin();
        it != tFBMap.end();
        ++it) {
       /* Create a pointer to the current foot-bot */
-      CCylinderEntity* pcFB = any_cast<CCylinderEntity*>(it->second);
+      CBoxEntity* pcFB = any_cast<CBoxEntity*>(it->second);
       /* Add the current position of the foot-bot if it's sufficiently far from the last */
       if(SquareDistance(pcFB->GetEmbodiedEntity().GetOriginAnchor().Position,
                         m_tWaypoints[pcFB].back()) > MIN_DISTANCE_SQUARED) {
@@ -117,8 +114,6 @@ void CTrajectoryLoopFunctions::PostStep() {
       }
       BuzzForeachVM(PutStimuli(pcFB->GetEmbodiedEntity().GetOriginAnchor().Position));
    }
-
-   m_cOutFile << GetSpace().GetSimulationClock() << "\t";
 
    CSpace::TMapPerType& mapFootBots = GetSpace().GetEntitiesByType("foot-bot");
    for(CSpace::TMapPerType::iterator it = mapFootBots.begin();
@@ -132,13 +127,17 @@ void CTrajectoryLoopFunctions::PostStep() {
    m_cOutFile << std::endl;
 }
 
+void CTrajectoryLoopFunctions::Destroy() {
+   m_cOutFile.close();
+}
+
 /****************************************/
 /****************************************/
-void CTrajectoryLoopFunctions::BuzzBytecodeUpdated() {
+void CBoxTrajectoryLoopFunctions::BuzzBytecodeUpdated() {
    /* Convey the stimuli to every robot */
    /*BuzzForeachVM(PutStimuli(m_vecStimuli));*/
 }
 /****************************************/
 /****************************************/
 
-REGISTER_LOOP_FUNCTIONS(CTrajectoryLoopFunctions, "trajectory_loop_functions")
+REGISTER_LOOP_FUNCTIONS(CBoxTrajectoryLoopFunctions, "box_trajectory_loop_functions")

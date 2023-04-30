@@ -1,24 +1,24 @@
-#ifndef TRAJECTORY_LOOP_FUNCTIONS_H
-#define TRAJECTORY_LOOP_FUNCTIONS_H
+#ifndef BOX_TRAJECTORY_LOOP_FUNCTIONS_H
+#define BOX_TRAJECTORY_LOOP_FUNCTIONS_H
 
 #include <argos3/core/simulator/loop_functions.h>
 #include <buzz/argos/buzz_loop_functions.h>
 #include <argos3/plugins/robots/foot-bot/simulator/footbot_entity.h>
-#include <argos3/plugins/simulator/entities/cylinder_entity.h>
+#include <argos3/plugins/simulator/entities/box_entity.h>
 
 using namespace argos;
 
-class CTrajectoryLoopFunctions : public CBuzzLoopFunctions {
+class CBoxTrajectoryLoopFunctions : public CBuzzLoopFunctions {
 
 public:
 
-   typedef std::map<CCylinderEntity*, std::vector<CVector3> > TWaypointMap;
+   typedef std::map<CBoxEntity*, std::vector<CVector3> > TWaypointMap;
    TWaypointMap m_tWaypoints;
    
 public:
 
-   CTrajectoryLoopFunctions() {}
-   virtual ~CTrajectoryLoopFunctions() {}
+   CBoxTrajectoryLoopFunctions() {}
+   virtual ~CBoxTrajectoryLoopFunctions() {}
 
    virtual void Init(TConfigurationNode& t_tree);
 
