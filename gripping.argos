@@ -35,7 +35,8 @@
   </controllers>
 
   <loop_functions library="build/loop_functions//libtrajectory_loop_functions"
-                  label="trajectory_loop_functions" />
+                  label="trajectory_loop_functions"
+                  outfile="cy_data.dat"/>
  
   <!-- *********************** -->
   <!-- * Arena configuration * -->

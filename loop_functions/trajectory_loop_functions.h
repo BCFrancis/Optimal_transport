@@ -3,6 +3,7 @@
 
 #include <argos3/core/simulator/loop_functions.h>
 #include <buzz/argos/buzz_loop_functions.h>
+#include <argos3/plugins/robots/foot-bot/simulator/footbot_entity.h>
 #include <argos3/plugins/simulator/entities/cylinder_entity.h>
 
 using namespace argos;
@@ -25,6 +26,8 @@ public:
 
    virtual void PostStep();
 
+   virtual void Destroy();
+
    inline const TWaypointMap& GetWaypoints() const {
       return m_tWaypoints;
    }
@@ -32,9 +35,14 @@ public:
    virtual void BuzzBytecodeUpdated();
 
 private:
-
   /** The stimuli associated to the tasks */
    std::vector<CVector3> m_vecStimuli;
+
+   /** The output file name */
+   std::string m_strOutFile;
+
+   /** The output file stream */
+   std::ofstream m_cOutFile;
 };
 
 #endif

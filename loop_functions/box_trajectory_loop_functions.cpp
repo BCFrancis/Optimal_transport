@@ -50,6 +50,7 @@ void CBoxTrajectoryLoopFunctions::Init(TConfigurationNode& t_tree) {
     */
    /* Get the map of all foot-bots from the space */
    CBuzzLoopFunctions::Init(t_tree);
+   GetNodeAttribute(t_tree, "outfile", m_strOutFile);
    CSpace::TMapPerType& tFBMap = GetSpace().GetEntitiesByType("box");
    /* Go through them */
    for(CSpace::TMapPerType::iterator it = tFBMap.begin();
@@ -63,6 +64,9 @@ void CBoxTrajectoryLoopFunctions::Init(TConfigurationNode& t_tree) {
       m_tWaypoints[pcFB].push_back(pcFB->GetEmbodiedEntity().GetOriginAnchor().Position);
       BuzzForeachVM(PutStimuli(pcFB->GetEmbodiedEntity().GetOriginAnchor().Position));
       }
+
+   m_cOutFile.open(m_strOutFile.c_str(),
+                  std::ofstream::out | std::ofstream::trunc);
 }
 
 /****************************************/
@@ -87,6 +91,8 @@ void CBoxTrajectoryLoopFunctions::Reset() {
       BuzzForeachVM(PutStimuli(pcFB->GetEmbodiedEntity().GetOriginAnchor().Position));
    }
 
+   m_cOutFile.open(m_strOutFile.c_str(),
+                   std::ofstream::out | std::ofstream::trunc);
 }
 
 /****************************************/
@@ -109,7 +115,22 @@ void CBoxTrajectoryLoopFunctions::PostStep() {
       BuzzForeachVM(PutStimuli(pcFB->GetEmbodiedEntity().GetOriginAnchor().Position));
    }
 
+   CSpace::TMapPerType& mapFootBots = GetSpace().GetEntitiesByType("foot-bot");
+   for(CSpace::TMapPerType::iterator it = mapFootBots.begin();
+       it != mapFootBots.end();
+       ++it) {
+      /* Create a pointer to the current foot-bot */
+      CFootBotEntity* pcFB = any_cast<CFootBotEntity*>(it->second);
+      m_cOutFile << pcFB->GetId() << "\t"
+                 << pcFB->GetEmbodiedEntity().GetOriginAnchor().Position << "\t";
+   }
+   m_cOutFile << std::endl;
 }
+
+void CTrajectoryLoopFunctions::Destroy() {
+   m_cOutFile.close();
+}
+
 /****************************************/
 /****************************************/
 void CBoxTrajectoryLoopFunctions::BuzzBytecodeUpdated() {
