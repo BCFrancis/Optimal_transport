@@ -44,9 +44,9 @@
 
 
     <distribute>
-      <position method="uniform" min="0,-6,0" max="0,6,0" />
+      <position method="uniform" min="0,-2,0" max="0,2,0" />
       <orientation method="uniform" min="0,0,0" max="0,0,0" />
-      <entity quantity="8" max_trials="100">
+      <entity quantity="10" max_trials="100">
         <foot-bot id="fb" rab_data_size="100">
           <body position="0,0,0" orientation="0,0,0" />
           <controller config="bcf" />
@@ -62,7 +62,7 @@
          set its 'movable' attribute to 'true', and define its
          mass (in kg).
     -->
-    <cylinder id="c" height="0.2" radius="1.0" mass="100.0" movable="true">
+    <cylinder id="c" height="0.2" radius="1.0" mass="100.0" movable="false">
       <body position="1.5,0,0" orientation="0,0,0" />
       <leds medium="led">
         <led offset="-0.15, 0.15,0.5"    anchor="origin" color="red"   />
@@ -70,6 +70,25 @@
       </leds>
 
     </cylinder>
+
+
+    <!-- cross 
+    <box id="b1" size="2.0,1.0,0.1" movable="false" mass="500.0">
+      <body position="1.5,0,0" orientation="45,0,0" />
+    </box>
+    <box id="b2" size="2.0,1.0,0.1" movable="false" mass="500.0">
+      <body position="1.5,0,0" orientation="-45,0,0" />
+    </box>
+      -->
+
+    <!-- flag     
+    <box id="b1" size="1.6,1.0,0.1" movable="false" mass="500.0">
+      <body position="1.0,.5,0" orientation="-45,0,0" />
+    </box>
+    <box id="b2" size="1.6,0.25,0.1" movable="false" mass="500.0">
+      <body position="1.0,-.5,0" orientation="45,0,0" />
+    </box>
+    -->
 
   </arena>
 
@@ -101,7 +120,7 @@
     <user_functions label="buzz_qt" />
       <camera>
           <placements>
-            <placement index="0" position="0, 0, 3" look_at="0,0, 2" up="0.00622709,0.943554,0.331159" lens_focal_length="10" />
+            <placement index="0" position="1.5, 0, 3" look_at="1.5, 0, 2" up="0.00622709,0.943554,0.331159" lens_focal_length="10" />
            </placements>
         </camera>
     </qt-opengl>
