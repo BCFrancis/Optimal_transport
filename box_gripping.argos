@@ -34,8 +34,8 @@
 
   </controllers>
 
-  <loop_functions library="build/loop_functions//libtrajectory_loop_functions"
-                  label="trajectory_loop_functions" />
+  <loop_functions library="build/loop_functions//libbox_trajectory_loop_functions"
+                  label="box_trajectory_loop_functions" />
  
   <!-- *********************** -->
   <!-- * Arena configuration * -->
@@ -44,32 +44,22 @@
 
 
     <distribute>
-      <position method="uniform" min="0,-6,0" max="0,6,0" />
+      <position method="uniform" min="0,-3,0" max="0,3,0" />
       <orientation method="uniform" min="0,0,0" max="0,0,0" />
-      <entity quantity="8" max_trials="100">
+      <entity quantity="9" max_trials="100">
         <foot-bot id="fb" rab_data_size="100">
           <body position="0,0,0" orientation="0,0,0" />
           <controller config="bcf" />
-          <dynamics2d>
-            <differential_steering max_force="10.0" max_torque="1.0"/>
-          </dynamics2d>
         </foot-bot>
       </entity>
     </distribute>
  
 
-    <!-- To use the cylinder as a grippable object, it is enough to
-         set its 'movable' attribute to 'true', and define its
-         mass (in kg).
-    -->
-    <cylinder id="c" height="0.2" radius="1.0" mass="100.0" movable="true">
-      <body position="1.5,0,0" orientation="0,0,0" />
-      <leds medium="led">
-        <led offset="-0.15, 0.15,0.5"    anchor="origin" color="red"   />
-        <led offset=" -0.15, -0.15,0.5"    anchor="origin" color="blue"  />
-      </leds>
 
-    </cylinder>
+    <box id="b" size="2.0,2.0,0.1" movable="true" mass="500.0">
+      <body position="1.5,0,0" orientation="0,0,0" />
+    </box>
+
 
   </arena>
 
@@ -77,11 +67,11 @@
   <!-- * Physics engines * -->
   <!-- ******************* -->
   <physics_engines>
-    <dynamics2d id="dyn2d" gripping_rigidity="5000">
-      <friction box_linear_friction="10.0"
-                box_angular_friction="10.0"
-                cylinder_linear_friction="10.0"
-                cylinder_angular_friction="10.0" />
+    <dynamics2d id="dyn2d" gripping_rigidity="10000">
+      <friction box_linear_friction="50.0"
+                box_angular_friction="50.0"
+                cylinder_linear_friction="25.0"
+                cylinder_angular_friction="25.0" />
     </dynamics2d>
   </physics_engines>
 
@@ -90,7 +80,6 @@
   <!-- ********* -->
   <media>
     <range_and_bearing id="rab"  check_occlusions="false"/>
-    <led id="led" />
   </media>
 
   <!-- ****************** -->
@@ -101,7 +90,7 @@
     <user_functions label="buzz_qt" />
       <camera>
           <placements>
-            <placement index="0" position="0, 0, 3" look_at="0,0, 2" up="0.00622709,0.943554,0.331159" lens_focal_length="10" />
+            <placement index="0" position="0, 0, 15" look_at="0,0, 14" up="0.00622709,0.943554,0.331159" lens_focal_length="10" />
            </placements>
         </camera>
     </qt-opengl>

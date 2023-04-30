@@ -42,7 +42,7 @@ function step() {
    	while (angle_diff < -pi) {
       angle_diff = angle_diff + (2 * pi)
    	}
-		turning_speed = 15.0
+		turning_speed = 1.0
 		if (angle_diff >= 0){
 			set_wheels(-turning_speed,turning_speed)	
 		}
@@ -66,7 +66,7 @@ function step() {
 				state = 2
 				loop_counter = loop_counter + 1
 				log(loop_counter)
-				if (loop_counter > 25){
+				if (loop_counter > 30){
 					gripper_lock()
 					state = 4
 				}
@@ -91,11 +91,18 @@ function step() {
 	}
 	if (state == 3){
 		initial_dispersion = 10.0
-		follower_time = 20.0
+		follower_time = 30.0
 		reset_time = follower_time + 20.0
 		force = neighbors.map(force_vector).reduce(force_sum, math.vec2.new(0.0, 0.0))
+		force_y_diff = pose.position.y -  obj_position[1] 
+		force_x_diff =  pose.position.x - obj_position[0]
+  	force_angle = math.atan(force_y_diff, force_x_diff)
+		force_dist = math.sqrt(force_y_diff^2 + force_x_diff^2)
+		obj_force = force_vector(id, {.distance=force_dist*100,.azimuth=force_angle})
+		force.x = force.x + obj_force.x
+		force.y = force.y + obj_force.y
 		if(neighbors.count() > 0){
-    	math.vec2.scale(force, 1.0 / neighbors.count())
+    	math.vec2.scale(force, 1.0 / (neighbors.count() + 1))
 		}
 		if (time - init_time  < initial_dispersion){
 			goto(force.x, force.y)
@@ -120,9 +127,9 @@ function step() {
 						}
 					}
 				}
-				turn_coeff = 20.0
-				inside_wheel = 8.0
-				outside_wheel = 12.0
+				turn_coeff = 10.0
+				inside_wheel = 1.0
+				outside_wheel = 3.0
 				if (l_dist > r_dist) {
 					speed_modifier = turn_coeff*(l_dist- 0.5)
 					set_wheels(inside_wheel + speed_modifier, outside_wheel)
@@ -134,8 +141,7 @@ function step() {
 		}
 	}
 	if (state == 4){
-		#goto(100, 0)
-		
+		set_wheels(0.0, 0.0)
 	}
 }
 
