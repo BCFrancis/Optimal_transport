@@ -24,6 +24,7 @@ function init() {
 # Executed for each step
 #
 function step() {
+	debug.print(state)
 	time = time + 1
 	if (time > 2 and first){
 		state = 0
@@ -65,8 +66,7 @@ function step() {
 				set_wheels(0.0,0.0)	
 				state = 2
 				loop_counter = loop_counter + 1
-				log(loop_counter)
-				if (loop_counter > 30){
+				if (loop_counter > 50){
 					gripper_lock()
 					state = 4
 				}
@@ -79,26 +79,32 @@ function step() {
 			if (value == 2) {
 				ready = ready+1
 			}
-			if (ready == neighbors.count()){
+			if (ready >= neighbors.count()){
 				all_ready = 1
 			}		
 			})		
-		
+		neighbors.listen("my_ready", function(value_id, value, robot_id){
+			if (value == 1){
+				all_ready = 1
+			}
+		})
+		neighbors.broadcast("my_ready", all_ready)
 		if (all_ready) {
 			state = 3
 			init_time = time
 		}
 	}
 	if (state == 3){
+		all_ready = 0
 		initial_dispersion = 10.0
-		follower_time = 30.0
+		follower_time = 20.0
 		reset_time = follower_time + 20.0
 		force = neighbors.map(force_vector).reduce(force_sum, math.vec2.new(0.0, 0.0))
 		force_y_diff = pose.position.y -  obj_position[1] 
 		force_x_diff =  pose.position.x - obj_position[0]
   	force_angle = math.atan(force_y_diff, force_x_diff)
 		force_dist = math.sqrt(force_y_diff^2 + force_x_diff^2)
-		obj_force = force_vector(id, {.distance=force_dist*100,.azimuth=force_angle})
+		obj_force = force_vector(id, {.distance=force_dist*500,.azimuth=force_angle})
 		force.x = force.x + obj_force.x
 		force.y = force.y + obj_force.y
 		if(neighbors.count() > 0){

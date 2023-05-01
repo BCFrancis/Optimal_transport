@@ -127,7 +127,7 @@ void CBoxTrajectoryLoopFunctions::PostStep() {
    m_cOutFile << std::endl;
 }
 
-void CTrajectoryLoopFunctions::Destroy() {
+void CBoxTrajectoryLoopFunctions::Destroy() {
    m_cOutFile.close();
 }
 
