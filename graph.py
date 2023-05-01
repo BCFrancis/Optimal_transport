@@ -1,7 +1,8 @@
 import matplotlib.pyplot as plt
 
 num_robots = 10
-name = 'box_' + str(num_robots) + '_box_data.dat'
+shape = 'cross'
+name = shape + '_' + str(num_robots) + '_cy_data.dat'
 # Read data from the input file
 with open(name, 'r') as f:
     lines = f.readlines()
@@ -19,6 +20,7 @@ average_positions = []
 for i, line in enumerate(lines):
     timesteps.append(i)
     tokens = line.split()
+    tokens = tokens[1:]
     total_x, total_y = 0, 0
 
     for j in range(0, len(tokens), 2):
@@ -57,5 +59,7 @@ ax.set_xlim([-2.5, 4.5])
 ax.set_ylim([-3, 3])
 ax.set_aspect('equal')
 ax.legend()
-ax.set_title(name)
-plt.show()
+plot_title = str(num_robots) + " Agent " + str(shape) + " Optimal Distribution"
+ax.set_title(plot_title)
+#plt.show()
+plt.savefig(plot_title + ".png")
