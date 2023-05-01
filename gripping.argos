@@ -47,7 +47,7 @@
     <distribute>
       <position method="uniform" min="0,-2,0" max="0,2,0" />
       <orientation method="uniform" min="0,0,0" max="0,0,0" />
-      <entity quantity="3" max_trials="100">
+      <entity quantity="10" max_trials="100">
         <foot-bot id="fb" rab_data_size="100">
           <body position="0,0,0" orientation="0,0,0" />
           <controller config="bcf" />
@@ -63,7 +63,7 @@
          set its 'movable' attribute to 'true', and define its
          mass (in kg).
     -->
-    <cylinder id="c" height="0.2" radius="0.1" mass="100.0" movable="false">
+    <cylinder id="c" height="0.2" radius="1.0" mass="100.0" movable="false">
       <body position="1.5,0,0" orientation="0,0,0" />
       <leds medium="led">
         <led offset="-0.15, 0.15,0.5"    anchor="origin" color="red"   />
@@ -73,14 +73,14 @@
     </cylinder>
 
 
-    <!-- cross       -->
-
+    <!-- cross       
     <box id="b1" size="2.0,1.0,0.1" movable="false" mass="500.0">
       <body position="1.5,0,0" orientation="45,0,0" />
     </box>
     <box id="b2" size="2.0,1.0,0.1" movable="false" mass="500.0">
       <body position="1.5,0,0" orientation="-45,0,0" />
     </box>
+    -->
 
     <!-- flag     
     <box id="b1" size="1.6,1.0,0.1" movable="false" mass="500.0">

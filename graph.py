@@ -7,7 +7,8 @@ from shapely.geometry import Point
 from shapely.geometry.polygon import Polygon as plg
 
 num_robots = 10
-name = 'box_' + str(num_robots) + '_box_data.dat'
+shape = 'cross'
+name = shape + '_' + str(num_robots) + '_cy_data.dat'
 # Read data from the input file
 with open(name, 'r') as f:
     lines = f.readlines()
@@ -28,6 +29,7 @@ for i, line in enumerate(lines):
     cur_polygon = []
     timesteps.append(i)
     tokens = line.split()
+    tokens = tokens[1:]
     total_x, total_y = 0, 0
 
     for j in range(0, len(tokens), 2):
