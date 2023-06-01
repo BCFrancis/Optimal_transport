@@ -57,9 +57,9 @@
  
 
 
-    <box id="b" size="0.1,0.1,0.1" movable="false" mass="500.0">
+    <polygon id="p1" points="[[1.0,1.0],[1.0,-1.0],[-1.0,1.0]]" movable="false">
       <body position="1.5,0,0" orientation="0,0,0" />
-    </box>
+    </polygon>
 
     <!-- Peanut   
 
